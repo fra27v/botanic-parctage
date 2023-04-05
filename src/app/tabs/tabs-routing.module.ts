@@ -28,12 +28,39 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'tab3',
+        path: 'qr-read',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+              import('../qr-read/qr-read.module').then(m => m.QrReadPageModule)
+          }
+        ]
+      },
+      {
+        path: 'container-list',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('../pages/container-list/container-list.module').then( m => m.ContainerListPageModule)
+          }
+        ]
+      },
+      {
+        path: 'container-details',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('../pages/container-details/container-details.module').then(m => m.ContainerDetailsPageModule)
+          }
+        ]
+      },
+      {
+        path: 'container-details/:containerId',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('../pages/container-details/container-details.module').then(m => m.ContainerDetailsPageModule)
           }
         ]
       },

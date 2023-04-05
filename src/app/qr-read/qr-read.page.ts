@@ -1,14 +1,16 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { ToastController, LoadingController, Platform } from '@ionic/angular';
+import { LoadingController, Platform } from '@ionic/angular';
 import jsQR from 'jsqr';
 import { UtilitiesService } from '../services/utilities.service';
+import { Router } from '@angular/router';
+
 
 @Component({
-  selector: 'app-tab3',
-  templateUrl: 'tab3.page.html',
-  styleUrls: ['tab3.page.scss']
+  selector: 'app-qr-read',
+  templateUrl: 'qr-read.page.html',
+  styleUrls: ['qr-read.page.scss']
 })
-export class Tab3Page {
+export class QrReadPage {
   @ViewChild('video', { static: false }) video: ElementRef;
   @ViewChild('canvas', { static: false }) canvas: ElementRef;
   @ViewChild('fileinput', { static: false }) fileinput: ElementRef;
@@ -21,10 +23,10 @@ export class Tab3Page {
   loading: HTMLIonLoadingElement = null;
 
   constructor(
-    private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
     private plt: Platform,
     public utilities: UtilitiesService,
+    private route:Router,
   ) {
     const isInStandaloneMode = () =>
       'standalone' in window.navigator && window.navigator['standalone'];
@@ -97,7 +99,14 @@ export class Tab3Page {
       if (code) {
         this.scanActive = false;
         this.scanResult = code.data;
-        this.utilities.showToast(this.scanResult );
+        this.utilities.showConfirm(
+          "Plante non enregistrée",
+          "Voulez-vous enregistrer une nouvelle plante?",
+          () => { 
+            this.route.navigate(['/tabs/container-details/code.data']); 
+          },
+          "Créer",
+          "Annuler")
       } else {
         if (this.scanActive) {
           requestAnimationFrame(this.scan.bind(this));
@@ -108,5 +117,4 @@ export class Tab3Page {
     }
   }
 
-  
 }
