@@ -1,9 +1,45 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>container-details</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="container-detail">
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content>
+  <div class="container-background">
+    <img [src]="profileImgUrl" alt="Selectionner une photo" (click)="profileImgInputElement.click();">
+    <input #profileImgInput style="position: absolute; width: 0; height: 0; opacity: 0" type="file" (change)="loadImageFromDevice($event)" class="fileInput" accept="image/png, image/jpeg">
+    <h2><ion-input type="text" style="text-align:center;" placeholder="Rentrer le nom" [(ngModel)]="container.name"></ion-input></h2>
+  </div>
 
+	<ion-list>
+		<ion-item>
+			<ion-label position="floating">Dernier arrosage</ion-label>
+      <ion-input [(ngModel)]="container.watering" readonly id="open-modal" (click)="openModal()"></ion-input>
+			
+
+      <ion-popover trigger="open-modal" class="custom-popover" [isOpen]="isPopoverOpen">
+        <ng-template>
+            <ion-datetime 
+              #popoverDateWatering presentation="date" [showDefaultButtons]="true"
+              (ionChange)="container.watering = formatDate(popoverDateWatering.value)"
+            ></ion-datetime>
+          </ng-template>
+      </ion-popover>
+
+
+		</ion-item>
+
+		<ion-item>
+			<ion-label position="floating">Description</ion-label>
+			<ion-input type="text" [(ngModel)]="container.description"></ion-input>
+		</ion-item>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+		<ion-fab-button (click)="save()">
+			<ion-icon name="save"></ion-icon>
+		</ion-fab-button>
+	</ion-fab>
 </ion-content>

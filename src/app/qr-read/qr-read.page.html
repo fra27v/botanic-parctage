@@ -9,15 +9,15 @@
 <ion-content>
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
+      <ion-title size="large">Scan</ion-title>
     </ion-toolbar>
   </ion-header>
 
-
-  <ion-button expand="full" (click)="startScan()">
-    <ion-icon slot="start" name="qr-scanner"></ion-icon>
-    Start scan
-  </ion-button>
+  <ion-fab vertical="center" horizontal="center" slot="fixed" *ngIf="!scanActive">
+		<ion-fab-button (click)="startScan()">
+			<ion-icon name="scan-circle"></ion-icon>
+		</ion-fab-button>
+	</ion-fab>
 
   <ion-button expand="full" (click)="reset()" color="warning" *ngIf="scanResult">
     <ion-icon slot="start" name="refresh"></ion-icon>
@@ -31,10 +31,11 @@
   <canvas #canvas hidden></canvas>
 
   <!-- Stop our scanner preview if active -->
-  <ion-button expand="full" (click)="stopScan()" color="danger" *ngIf="scanActive">
-    <ion-icon slot="start" name="close"></ion-icon>
-    Stop scan
-  </ion-button>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" color="danger" *ngIf="scanActive">
+		<ion-fab-button (click)="stopScan()">
+			<ion-icon name="stop-circle"></ion-icon>
+		</ion-fab-button>
+	</ion-fab>
 
   <ion-card *ngIf="scanResult">
     <ion-card-header>

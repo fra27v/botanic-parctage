@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { where,Firestore,query,docData, collectionData,CollectionReference, collection,doc, addDoc,DocumentReference, setDoc } from '@angular/fire/firestore';
+import { getDoc, where,Firestore,query,docData, collectionData,CollectionReference, collection,doc, addDoc,DocumentReference, setDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { traceUntilFirst } from '@angular/fire/performance';
 import * as Constants from './constants.service';
@@ -8,7 +8,7 @@ export interface Container {
   id?: string,
   name: string,
   description?: string,
-  watering?: number,
+  watering?: string,
   profilePic?: string,
 }
 
@@ -33,12 +33,23 @@ export class ContainerService {
   }
 
   newContainerStructure():Container{
-    return {name:"",description:"",watering:null};
+    return {name:"",description:"",watering:null,profilePic:null};
   }
 
   getContainer(containerId:string):Observable<Container>{
     let docRef=doc(this.containerCollection,containerId);
     return docData(docRef);
+  }
+
+  async doesContainerExist(containerId:string):Promise<boolean>{
+    let docRef=doc(this.containerCollection,containerId);
+    return getDoc(docRef).then( (doc) => {
+      if(doc.exists){
+        return true;
+      }
+      return false;
+    }
+    );
   }
 
   getAllContainers():Observable<Container[]>{
@@ -53,7 +64,7 @@ export class ContainerService {
     return setDoc(doc(this.containerCollection,container.id),container);
   }
 
-  newPet(container:Container):Promise<DocumentReference>{
+  newContainer(container:Container):Promise<DocumentReference>{
     return addDoc(this.containerCollection,container);
   }
 

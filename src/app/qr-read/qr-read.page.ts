@@ -2,7 +2,8 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { LoadingController, Platform } from '@ionic/angular';
 import jsQR from 'jsqr';
 import { UtilitiesService } from '../services/utilities.service';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras  } from '@angular/router';
+import { ContainerService } from '../services/container.service';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class QrReadPage {
     private plt: Platform,
     public utilities: UtilitiesService,
     private route:Router,
+    private containerService:ContainerService,
   ) {
     const isInStandaloneMode = () =>
       'standalone' in window.navigator && window.navigator['standalone'];
@@ -98,15 +100,24 @@ export class QrReadPage {
   
       if (code) {
         this.scanActive = false;
-        this.scanResult = code.data;
-        this.utilities.showConfirm(
-          "Plante non enregistrée",
-          "Voulez-vous enregistrer une nouvelle plante?",
-          () => { 
-            this.route.navigate(['/tabs/container-details/code.data']); 
-          },
-          "Créer",
-          "Annuler")
+        let searchRegExp = new RegExp("[\\\/\\\?\\\\:\\\&\\\\]", 'g'); // Throws SyntaxError
+        this.scanResult = code.data.replace(searchRegExp,"");
+        this.containerService.doesContainerExist(this.scanResult).then( (bExists) => {
+          let navigationExtras: NavigationExtras = {
+            queryParams: {
+              new: bExists
+            }
+          };
+          this.utilities.showConfirm(
+            "Plante non enregistrée",
+            "Voulez-vous enregistrer une nouvelle plante?",
+            () => { 
+              this.route.navigate(['/tabs/container-details/'+this.scanResult], navigationExtras); 
+            },
+            "Créer",
+            "Annuler");
+        } );
+
       } else {
         if (this.scanActive) {
           requestAnimationFrame(this.scan.bind(this));

@@ -1,4 +1,4 @@
-package io.ionic.demo.pg.cap.ng;
+package com.fva.botanic-parctage;
 
 import com.getcapacitor.BridgeActivity;
 
