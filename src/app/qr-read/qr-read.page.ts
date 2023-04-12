@@ -103,7 +103,11 @@ export class QrReadPage {
         let searchRegExp = new RegExp("[\\\/\\\?\\\\:\\\&\\\\]", 'g'); // Throws SyntaxError
         this.scanResult = code.data.replace(searchRegExp,"");
         this.containerService.doesContainerExist(this.scanResult).then( (bExists) => {
-          if(!bExists){
+          if(bExists)
+          {
+            this.route.navigate(['/tabs/container-details/'+this.scanResult]); 
+          }
+          else{
             let navigationExtras: NavigationExtras = {
               queryParams: {
                 new: bExists
@@ -118,9 +122,7 @@ export class QrReadPage {
               "Créer",
               "Annuler");
           }
-          else{
-            this.route.navigate(['/tabs/container-details/'+this.scanResult]);
-          }
+
         } );
 
       } else {

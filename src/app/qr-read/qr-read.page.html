@@ -19,10 +19,6 @@
 		</ion-fab-button>
 	</ion-fab>
 
-  <ion-button expand="full" (click)="reset()" color="warning" *ngIf="scanResult">
-    <ion-icon slot="start" name="refresh"></ion-icon>
-    Reset
-  </ion-button>
 
   <!-- Shows our camera stream -->
   <video #video [hidden]="!scanActive" width="100%"></video>
@@ -37,14 +33,6 @@
 		</ion-fab-button>
 	</ion-fab>
 
-  <ion-card *ngIf="scanResult">
-    <ion-card-header>
-      <ion-card-title>QR Code</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      {{ scanResult }}
-    </ion-card-content>
-  </ion-card>
 </ion-content>
 
 
