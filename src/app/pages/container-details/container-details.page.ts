@@ -119,6 +119,8 @@ export class ContainerDetailsPage {
             //console.log(uploadResults);
             this.utilities.showToast(this.msgSaved);
             this.updateImgUrl();
+            //save the container, to avoir orphans images
+            this.save();
           },
           (error) => {
             this.utilities.showToast(this.msgGenericError);
