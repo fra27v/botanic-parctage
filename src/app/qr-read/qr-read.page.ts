@@ -103,19 +103,24 @@ export class QrReadPage {
         let searchRegExp = new RegExp("[\\\/\\\?\\\\:\\\&\\\\]", 'g'); // Throws SyntaxError
         this.scanResult = code.data.replace(searchRegExp,"");
         this.containerService.doesContainerExist(this.scanResult).then( (bExists) => {
-          let navigationExtras: NavigationExtras = {
-            queryParams: {
-              new: bExists
-            }
-          };
-          this.utilities.showConfirm(
-            "Plante non enregistrée",
-            "Voulez-vous enregistrer une nouvelle plante?",
-            () => { 
-              this.route.navigate(['/tabs/container-details/'+this.scanResult], navigationExtras); 
-            },
-            "Créer",
-            "Annuler");
+          if(!bExists){
+            let navigationExtras: NavigationExtras = {
+              queryParams: {
+                new: bExists
+              }
+            };
+            this.utilities.showConfirm(
+              "Plante non enregistrée",
+              "Voulez-vous enregistrer une nouvelle plante?",
+              () => { 
+                this.route.navigate(['/tabs/container-details/'+this.scanResult], navigationExtras); 
+              },
+              "Créer",
+              "Annuler");
+          }
+          else{
+            this.route.navigate(['/tabs/container-details/'+this.scanResult]);
+          }
         } );
 
       } else {
