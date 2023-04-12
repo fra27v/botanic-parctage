@@ -44,22 +44,36 @@ export class QrReadPage {
     this.videoElement = this.video.nativeElement;
   }
 
+  ionViewWillEnter(){
+    navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment' }
+    }).then( (stream) =>{
+      stream.getTracks().forEach(track => { 
+        track.stop();
+      });
+    });
+  }
+
 
   reset() {
     this.scanResult = null;
   }
 
-  stopScan() {
+  async stopScan() {
     this.scanActive = false;
+    await this.videoElement.srcObject.getTracks().forEach(track => { 
+      track.stop();
+    });
   }
 
   async startScan() {
     // Not working on iOS standalone mode!
-    const stream = await navigator.mediaDevices.getUserMedia({
+    let stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: 'environment' }
     });
-  
+ 
     this.videoElement.srcObject = stream;
+
     // Required for Safari
     this.videoElement.setAttribute('playsinline', true);
   
@@ -102,6 +116,7 @@ export class QrReadPage {
         this.scanActive = false;
         let searchRegExp = new RegExp("[\\\/\\\?\\\\:\\\&\\\\]", 'g'); // Throws SyntaxError
         this.scanResult = code.data.replace(searchRegExp,"");
+        await this.stopScan();
         this.containerService.doesContainerExist(this.scanResult).then( (bExists) => {
           if(bExists)
           {
